@@ -40,6 +40,11 @@ Here are the steps:
 
     https://gist.github.com/ImAnEnabler/091a9e1ee2d6a0805408e009e2f4a2b5#file-decodeusbkeypress-py
     https://github.com/gkhns/Logger-/blob/main/code.py
+    
+    ```sh
+    python newcode.py hexa.txt
+    ```
+
 
 The code can't understand whether the CAPS LOCK was on or off but it gives indicators when there is a change. There is a little bit more work to do to get the final answer. 
 
