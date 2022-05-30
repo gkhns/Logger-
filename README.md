@@ -46,6 +46,8 @@ Here are the steps:
     ```
 
 
-The code can't understand whether the CAPS LOCK was on or off but it gives indicators when there is a change. There is a little bit more work to do to get the final answer. 
+The code can't understand whether the CAPS LOCK was on or off but it gives indicators when there is a change. 
+
+There is a little bit more work to do to get the final answer. 
 
 
