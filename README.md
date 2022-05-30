@@ -36,7 +36,10 @@ Here are the steps:
 2) Add HID data as a new colum
 3) Export data as a CSV file 
 4) Trim data: `cat exported.csv | cut -d "," -f 7 | cut -d "\"" -f 2 | grep -vE "HID Data" > hexa.txt`
-5) Use the python code originally presented in https://github.com/gkhns/Logger-/blob/main/code.py
+5) Use the python code originally presented in 
+
+    https://gist.github.com/ImAnEnabler/091a9e1ee2d6a0805408e009e2f4a2b5#file-decodeusbkeypress-py
+    https://github.com/gkhns/Logger-/blob/main/code.py
 
 The code can't understand whether the CAPS LOCK was on or off but it gives indicators when there is a change. There is a little bit more work to do to get the final answer. 
 
