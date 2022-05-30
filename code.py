@@ -1,71 +1,107 @@
 # The code was originally posted the following link
-# https://abawazeeer.medium.com/kaizen-ctf-2018-reverse-engineer-usb-keystrok-from-pcap-file-2412351679f4
+# https://blog.stayontarget.org/2019/03/decoding-mixed-case-usb-keystrokes-from.html
 
+#!/usr/bin/python
+# coding: utf-8
+from __future__ import print_function
+import sys,os
 
-newmap = {
-2: "PostFail",
-4: "a",
- 5: "b",
- 6: "c",
- 7: "d",
- 8: "e",
-  9: "f",
-  10: "g",
-  11: "h",
-  12: "i",
-  13: "j",
-  14: "k",
-  15: "l",
-  16: "m",
-  17: "n",
-  18: "o",
-  19: "p",
-  20: "q",
-  21: "r",
-  22: "s",
-  23: "t",
-  24: "u",
-  25: "v",
-  26: "w",
-  27: "x",
-  28: "y",
-  29: "z",
-  30: "1",
-  31: "2",
-  32: "3",
-  33: "4",
-  34: "5",
-  35: "6",
-  36: "7",
-  37: "8",
-  38: "9",
-  39: "0",
-  40: "Enter",
-  41: "esc",
-  42: "del",
-  43: "tab",
-  44: "space",
-  45: "-",
-  47: "[",
-  48: "]",
-  56: "/",
-  57: "CapsLock",
-  79: "RightArrow",
-  80: "LetfArrow"
-}
+#declare -A lcasekey
+lcasekey = {}
+#declare -A ucasekey
+ucasekey = {}
 
-myKeys = open('hexa.txt')
-i = 1
-for line in myKeys:
-  bytesArray = bytearray.fromhex(line.strip())
-  #print "Line Number: " + str(i)
-  for byte in bytesArray:
-    if byte != 0:
-      keyVal = int(byte)
+#associate USB HID scan codes with keys
+#ex: key 4  can be both "a" and "A", depending on if SHIFT is held down
+lcasekey[4]="a";           ucasekey[4]="A"
+lcasekey[5]="b";           ucasekey[5]="B"
+lcasekey[6]="c";           ucasekey[6]="C"
+lcasekey[7]="d";           ucasekey[7]="D"
+lcasekey[8]="e";           ucasekey[8]="E"
+lcasekey[9]="f";           ucasekey[9]="F"
+lcasekey[10]="g";          ucasekey[10]="G"
+lcasekey[11]="h";          ucasekey[11]="H"
+lcasekey[12]="i";          ucasekey[12]="I"
+lcasekey[13]="j";          ucasekey[13]="J"
+lcasekey[14]="k";          ucasekey[14]="K"
+lcasekey[15]="l";          ucasekey[15]="L"
+lcasekey[16]="m";          ucasekey[16]="M"
+lcasekey[17]="n";          ucasekey[17]="N"
+lcasekey[18]="o";          ucasekey[18]="O"
+lcasekey[19]="p";          ucasekey[19]="P"
+lcasekey[20]="q";          ucasekey[20]="Q"
+lcasekey[21]="r";          ucasekey[21]="R"
+lcasekey[22]="s";          ucasekey[22]="S"
+lcasekey[23]="t";          ucasekey[23]="T"
+lcasekey[24]="u";          ucasekey[24]="U"
+lcasekey[25]="v";          ucasekey[25]="V"
+lcasekey[26]="w";          ucasekey[26]="W"
+lcasekey[27]="x";          ucasekey[27]="X"
+lcasekey[28]="y";          ucasekey[28]="Y"
+lcasekey[29]="z";          ucasekey[29]="Z"
+lcasekey[30]="1";          ucasekey[30]="!"
+lcasekey[31]="2";          ucasekey[31]="@"
+lcasekey[32]="3";          ucasekey[32]="#"
+lcasekey[33]="4";          ucasekey[33]="$"
+lcasekey[34]="5";          ucasekey[34]="%"
+lcasekey[35]="6";          ucasekey[35]="^"
+lcasekey[36]="7";          ucasekey[36]="&"
+lcasekey[37]="8";          ucasekey[37]="*"
+lcasekey[38]="9";          ucasekey[38]="("
+lcasekey[39]="0";          ucasekey[39]=")"
+lcasekey[40]="Enter";      ucasekey[40]="Enter"
+lcasekey[41]="esc";        ucasekey[41]="esc"
+lcasekey[42]="del";        ucasekey[42]="del"
+lcasekey[43]="tab";        ucasekey[43]="tab"
+lcasekey[44]="space";      ucasekey[44]="space"
+lcasekey[45]="-";          ucasekey[45]="_"
+lcasekey[46]="=";          ucasekey[46]="+"
+lcasekey[47]="[";          ucasekey[47]="{"
+lcasekey[48]="]";          ucasekey[48]="}"
+lcasekey[49]="\\";         ucasekey[49]="|"
+lcasekey[50]=" ";          ucasekey[50]=" "
+lcasekey[51]=";";          ucasekey[51]=":"
+lcasekey[52]="'";          ucasekey[52]="\""
+lcasekey[53]="`";          ucasekey[53]="~"
+lcasekey[54]=",";          ucasekey[54]="<"
+lcasekey[55]=".";          ucasekey[55]=">"
+lcasekey[56]="/";          ucasekey[56]="?"
+lcasekey[57]="CapsLock";   ucasekey[57]="CapsLock"
+lcasekey[79]="RightArrow"; ucasekey[79]="RightArrow"
+lcasekey[80]="LeftArrow";  ucasekey[80]="LeftArrow"
+lcasekey[84]="/";          ucasekey[84]="/"
+lcasekey[85]="*";          ucasekey[85]="*"
+lcasekey[86]="-";          ucasekey[86]="-"
+lcasekey[87]="+";          ucasekey[87]="+"
+lcasekey[88]="Enter";      ucasekey[88]="Enter"
+lcasekey[89]="1";          ucasekey[89]="1"
+lcasekey[90]="2";          ucasekey[90]="2"
+lcasekey[91]="3";          ucasekey[91]="3"
+lcasekey[92]="4";          ucasekey[92]="4"
+lcasekey[93]="5";          ucasekey[93]="5"
+lcasekey[94]="6";          ucasekey[94]="6"
+lcasekey[95]="7";          ucasekey[95]="7"
+lcasekey[96]="8";          ucasekey[96]="8"
+lcasekey[97]="9";          ucasekey[97]="9"
+lcasekey[98]="0";          ucasekey[98]="0"
+lcasekey[99]=".";          ucasekey[99]="."
 
-      if keyVal in newmap:
-        print newmap[keyVal]
-      else:
-        print "No map found for this value: " + str(keyVal)
+#make sure filename to open has been provided
+if len(sys.argv) == 2:
+	keycodes = open(sys.argv[1])
+	for line in keycodes:
+		#dump line to bytearray
+		bytesArray = bytearray.fromhex(line.strip())
+		#see if we have a key code
+		val = int(bytesArray[2])
+		if val > 3 and val < 100:
+			#see if left shift or right shift was held down
+			if bytesArray[0] == 0x02 or bytesArray[0] == 0x20 :
+				print(ucasekey[int(bytesArray[2])], end=''),  #single line output
+				#print(ucasekey[int(bytesArray[2])])            #newline output
+			else:
+				print(lcasekey[int(bytesArray[2])], end=''),  #single line output
+				#print(lcasekey[int(bytesArray[2])])            #newline output
+else:
+    print("USAGE: python %s [filename]" % os.path.basename(__file__))
 
-      i+=1
