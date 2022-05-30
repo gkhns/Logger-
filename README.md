@@ -38,6 +38,9 @@ Here are the steps:
 4) Trim data: `cat exported.csv | cut -d "," -f 7 | cut -d "\"" -f 2 | grep -vE "HID Data" > hexa.txt`
 5) Modify python code originally presented in https://abawazeeer.medium.com/kaizen-ctf-2018-reverse-engineer-usb-keystrok-from-pcap-file-2412351679f4
 
-The code can't understand whether the CAPS LOCS was on or off so it gives indicators when there is a change. In other words, there is a little bit more work to do.
+    https://github.com/gkhns/Logger-/blob/main/code.py
+
+
+The code can't understand whether the CAPS LOCK was on or off but it gives indicators when there is a change. There is a little bit more work to do to get the final answer. 
 
 
