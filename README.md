@@ -1,13 +1,11 @@
-#Windows #SMB #SQL
+Challenge Description
 
+A client reported that a PC might have been infected, as it's running slow. We've collected all the evidence from the suspect workstation, and found a suspicious trace of USB traffic. Can you identify the compromised data?
 
+Given: PCAP file
 
-**NMAP Scan**
+As the first step, we open the PCAP file in Wireshark:
 
-```sh
-  nmap -sV -sC -p- 10.129.95.187
-  ```
+* Capture File Properties --> Elapsed Time --> 55 seconds
+* Protocol Hierarchy --> 100% USB traffic and 18.9% Text Items
 
-- To see the versions of the services running (**-sV**)
-- To perform a script scan using the default set of scripts (**-sC**)
-- To scan all ports from 1 through 65535 (**-p-**)
