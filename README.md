@@ -25,16 +25,18 @@ https://wiki.wireshark.org/USB
 
 Here are the steps:
 
-1) Apply a filter: `((usb.transfer_type == 0x01) && (frame.len == 35)) && !(usb.capdata == 00:00:00:00:00:00:00:00)`
+1) Apply filter: `((usb.transfer_type == 0x01) && (frame.len == 35)) && !(usb.capdata == 00:00:00:00:00:00:00:00)`
 
     `(usb.transfer_type == 0x01)`: To list all interrupt communication
+    
     `(frame.len == 35)` : To include frame lengths equal to 35
-    `!(usb.capdata == 00:00:00:00:00:00:00:00` : To eclude empty HID data
+    
+    `!(usb.capdata == 00:00:00:00:00:00:00:00` : To exclude empty HID data
     
 2) Add HID data as a new colum
-3) Export the data as a CSV file 
-4) Trim the data: `cat exported.csv | cut -d "," -f 7 | cut -d "\"" -f 2 | grep -vE "HID Data" > hexa.txt`
-5) Mofidy the python code in https://abawazeeer.medium.com/kaizen-ctf-2018-reverse-engineer-usb-keystrok-from-pcap-file-2412351679f4
-pyt
+3) Export data as a CSV file 
+4) Trim data: `cat exported.csv | cut -d "," -f 7 | cut -d "\"" -f 2 | grep -vE "HID Data" > hexa.txt`
+5) Modify python code in https://abawazeeer.medium.com/kaizen-ctf-2018-reverse-engineer-usb-keystrok-from-pcap-file-2412351679f4
+
 6) 
 
