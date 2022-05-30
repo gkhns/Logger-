@@ -2,7 +2,6 @@
 # https://abawazeeer.medium.com/kaizen-ctf-2018-reverse-engineer-usb-keystrok-from-pcap-file-2412351679f4
 
 
-
 newmap = {
 2: "PostFail",
 4: "a",
